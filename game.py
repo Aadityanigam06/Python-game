@@ -1,22 +1,23 @@
 import random
 import tkinter
 from tkinter import *
+from PIL import Image, ImageTk  # Import PIL modules
 
 # Setting up the window
 S = tkinter.Tk()
-S.title("My Window")
+S.title("Rock Paper Scissor Game")
 S.configure(background='Sky blue')
 S.geometry('400x400')
 S.resizable(0, 0)
 
 # Labels for the display text
-L1 = Label(S, text='Rock, Paper, Scissor', font=("COMIC SANS MS", 15, "bold")).place(x=80, y=10)
+L1 = Label(S, text='Rock, Paper, Scissor', font=("COMIC SANS MS", 15, "bold"),bg = 'Sky Blue')
+L1.place(x=95, y=10)
 
-Choice = StringVar()
-L2 = Label(S, text='Choose an option: Rock, Paper, Scissor', font=("COMIC SANS MS", 15, "bold")).place(x=3, y=100)
+L2 = Label(S, text='Choose an option:', font=("COMIC SANS MS", 15, "bold"), bg = 'Sky Blue')
+L2.place(x=110, y=70)
 
-Text1 = Entry(S, font='arial 15', bd=3, textvariable=Choice, bg='white', width=25)
-Text1.place(x=60, y=155)
+Result = StringVar()
 
 # Random function to generate the computer choice
 def comp_choice():
@@ -31,34 +32,34 @@ def comp_choice():
 
 comp_choice()
 
-L3 = Label(S, text='Result:-', font=("COMIC SANS MS", 15, "bold")).place(x=150, y=250)
-Result = StringVar()
-R = Entry(S, font='arial 14', bd=3, textvariable=Result, bg='white', width=30).place(x=30, y=300)
+L3 = Label(S, text='Result:', font=("COMIC SANS MS", 15, "bold"),bg = 'Sky blue')
+L3.place(x=170, y=250)
+
+R = Entry(S, font='arial 14', bd=3, textvariable=Result, bg='white', width=30)
+R.place(x=30, y=300)
 
 # Function to define the gameplay
-def gameplay():
-    global User_Choice
-    User_Choice = Choice.get().capitalize()  # Capitalize to standardize input
-    if User_Choice == choice_comp:
-        Result.set("Tie, Both have the same choice")
-    elif User_Choice == 'Rock' and choice_comp == 'Paper':
+def gameplay(user_choice):
+    global choice_comp
+    if user_choice == choice_comp:
+        Result.set(f"Tie! Both selected {user_choice}")
+    elif user_choice == 'Rock' and choice_comp == 'Paper':
         Result.set("You Lose, Computer selected Paper")
-    elif User_Choice == 'Rock' and choice_comp == 'Scissor':
-        Result.set("You Win, Computer selected Scissor")   
-    elif User_Choice == 'Paper' and choice_comp == 'Scissor':
+    elif user_choice == 'Rock' and choice_comp == 'Scissor':
+        Result.set("You Win, Computer selected Scissor")
+    elif user_choice == 'Paper' and choice_comp == 'Scissor':
         Result.set("You Lose, Computer selected Scissor")
-    elif User_Choice == 'Paper' and choice_comp == 'Rock':
+    elif user_choice == 'Paper' and choice_comp == 'Rock':
         Result.set("You Win, Computer selected Rock")
-    elif User_Choice == 'Scissor' and choice_comp == 'Rock':
+    elif user_choice == 'Scissor' and choice_comp == 'Rock':
         Result.set("You Lose, Computer selected Rock")
-    elif User_Choice == 'Scissor' and choice_comp == 'Paper':
+    elif user_choice == 'Scissor' and choice_comp == 'Paper':
         Result.set("You Win, Computer selected Paper")
     else:
-        Result.set("Invalid Choice: Choose the correct option mentioned above")
+        Result.set("Invalid Choice")
 
 # Function to reset the window
 def Reset():
-    Choice.set("")  # Clear the user input field
     Result.set("")  # Clear the result field
     comp_choice()   # Generate a new computer choice
 
@@ -66,9 +67,35 @@ def Reset():
 def Exit():
     S.destroy()
 
-B1 = Button(S, text="Reset", command=Reset, width=10, bg='yellow', fg='Black').place(x=100, y=350)
-B2 = Button(S, text="Exit", command=Exit, width=10, bg='yellow', fg='Black').place(x=200, y=350)
-B3 = Button(S, text="Play", command=gameplay, width=10, bg='yellow', fg='Black').place(x=150, y=200)
+# Set the desired size for the images
+image_size = (100, 100)
+
+# Loading images for Rock, Paper, and Scissors using PIL and resizing them
+rock_img = Image.open("C:/Users/aadit/OneDrive/Desktop/Code/Python-game/rock.png").resize(image_size, Image.Resampling.LANCZOS)
+paper_img = Image.open("C:/Users/aadit/OneDrive/Desktop/Code/Python-game/paper.png").resize(image_size, Image.Resampling.LANCZOS)
+scissor_img = Image.open("C:/Users/aadit/OneDrive/Desktop/Code/Python-game/scissor.png").resize(image_size, Image.Resampling.LANCZOS)
+
+# Convert the images to PhotoImage
+rock_img = ImageTk.PhotoImage(rock_img)
+paper_img = ImageTk.PhotoImage(paper_img)
+scissor_img = ImageTk.PhotoImage(scissor_img)
+
+# Creating buttons for each choice with the resized images
+B1 = Button(S, image=rock_img, command=lambda: gameplay('Rock'))
+B1.place(x=30, y=130)
+
+B2 = Button(S, image=paper_img, command=lambda: gameplay('Paper'))
+B2.place(x=150, y=130)
+
+B3 = Button(S, image=scissor_img, command=lambda: gameplay('Scissor'))
+B3.place(x=270, y=130)
+
+# Reset and Exit buttons
+B4 = Button(S, text="Reset", command=Reset, width=10, bg='yellow', fg='Black')
+B4.place(x=110, y=350)
+
+B5 = Button(S, text="Exit", command=Exit, width=10, bg='yellow', fg='Black')
+B5.place(x=210, y=350)
 
 # Function to call the window
 S.mainloop()
